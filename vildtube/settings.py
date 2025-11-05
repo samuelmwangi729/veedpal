@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+from dotenv import load_dotenv
+load_dotenv() 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -25,9 +26,10 @@ SECRET_KEY = "django-insecure-i^xuz5f$b!-a8_gyv4atqko&yg#wls!lrruy*=w)4^syx=ig)&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.100.31"]
 
-
+#generate a new one in case the SECRET KEY is not available in the .env
+MASTER_KEY = os.environ.get("SECRET_KEYS", '')
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,8 +39,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
+    'Auth.apps.AuthConfig'
 ]
 
+AUTH_USER_MODEL = "Auth.CustomUserModel"
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -73,9 +78,13 @@ WSGI_APPLICATION = "vildtube.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':os.getenv("PGDATABASE"),
+        'USER':os.getenv("PGUSER"),
+        'PASSWORD':os.getenv("PGPASSWORD"),
+        'HOST':os.getenv("PGHOST"),
+        'PORT':os.getenv("PGPOST"),
     }
 }
 
