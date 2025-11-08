@@ -1,6 +1,14 @@
 from rest_framework import serializers
 from Auth.models import CustomUserModel as User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+class JwtTokenSerializerPair(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['role'] = user.role
+        return token
 class AuthSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True,default=0)  # input only
     class Meta:
